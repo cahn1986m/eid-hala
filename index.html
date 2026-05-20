@@ -6,96 +6,150 @@
 <title>عيد أضحى مبارك</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     background: #0d0620;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     min-height: 100vh;
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
     touch-action: none;
   }
 
-  #stage {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  /* الخلفية - صورة ميدجورني */
-  #bg {
-    position: absolute;
+  /* ===== شاشة البداية ===== */
+  #splash {
+    position: fixed;
     inset: 0;
-    background: linear-gradient(180deg, #0a1628 0%, #1a2a4a 40%, #2a3a5a 100%);
-    z-index: 0;
-  }
-
-  /* فيديو الخروف يمشي */
-  #video-walk {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-   object-fit: contain;
-    z-index: 2;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
   }
-
-  /* فيديو المنسف */
-  #video-mansaf {
+  #splash-bg {
     position: absolute;
-    bottom: 0;
-    left: 0;
+    inset: 0;
+    background-image: url('mecca.png');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+  }
+  #splash-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+    z-index: 1;
+  }
+  #splash-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  #splash-content h1 {
+    color: #FFD700;
+    font-size: clamp(32px, 9vw, 64px);
+    font-weight: 900;
+    text-shadow: 0 0 40px rgba(255,200,0,0.8), 0 3px 0 rgba(0,0,0,0.6);
+    line-height: 1.3;
+    animation: fadeDown 0.8s ease both;
+  }
+  #splash-content p {
+    color: #fff;
+    font-size: clamp(16px, 4.5vw, 28px);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.9);
+    line-height: 1.6;
+    animation: fadeDown 0.8s 0.2s ease both;
+  }
+  #start-btn {
+    margin-top: 20px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border: none;
+    color: #1a0a00;
+    font-size: clamp(18px, 5vw, 26px);
+    font-weight: 900;
+    padding: 16px 48px;
+    border-radius: 60px;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255,200,0,0.6), 0 4px 15px rgba(0,0,0,0.4);
+    animation: fadeDown 0.8s 0.4s ease both, glowPulse 2s 1.2s ease-in-out infinite;
+    font-family: inherit;
+  }
+  #start-btn:active { transform: scale(0.95); }
+  .sender-name {
+    color: #FFD700;
+    font-size: clamp(14px, 3.5vw, 20px);
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    animation: fadeDown 0.8s 0.6s ease both;
+  }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes glowPulse { 0%,100%{box-shadow:0 0 30px rgba(255,200,0,0.6),0 4px 15px rgba(0,0,0,0.4)} 50%{box-shadow:0 0 50px rgba(255,200,0,1),0 4px 20px rgba(0,0,0,0.5)} }
+
+  /* ===== المشهد الرئيسي ===== */
+  #stage {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    display: none;
+  }
+  #video-walk {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
-   object-fit: contain;
+    object-fit: contain;
+    background: #0d0620;
+    z-index: 2;
+  }
+  #video-mansaf {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #0d0620;
     z-index: 3;
     display: none;
     pointer-events: none;
   }
-
-  /* طبقة اللمس فوق الفيديو */
   #touch-layer {
     position: absolute;
     inset: 0;
     z-index: 10;
     cursor: pointer;
   }
-
-  /* hint النص */
   #hint {
     position: absolute;
     bottom: 8%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 20;
-    color: rgba(255, 220, 100, 0.95);
-    font-size: clamp(16px, 4vw, 22px);
-    font-weight: 600;
+    color: rgba(255,220,100,0.95);
+    font-size: clamp(16px,4vw,22px);
+    font-weight: 700;
     text-align: center;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.9);
     animation: pulse 1.4s ease-in-out infinite;
     white-space: nowrap;
     pointer-events: none;
+    background: rgba(0,0,0,0.4);
+    padding: 8px 20px;
+    border-radius: 30px;
   }
-  @keyframes pulse { 0%,100%{opacity:0.5;transform:translateX(-50%) scale(1)} 50%{opacity:1;transform:translateX(-50%) scale(1.05)} }
-
-  /* فلاش */
+  @keyframes pulse { 0%,100%{opacity:0.6;transform:translateX(-50%) scale(1)} 50%{opacity:1;transform:translateX(-50%) scale(1.05)} }
   #flash {
     position: absolute;
     inset: 0;
-   background: #0d0620;
+    background: white;
     opacity: 0;
     z-index: 50;
     pointer-events: none;
     transition: opacity 0.08s;
   }
-
-  /* confetti canvas */
   #confetti-canvas {
     position: absolute;
     inset: 0;
@@ -103,8 +157,6 @@
     pointer-events: none;
     display: none;
   }
-
-  /* نص المعايدة النهائي */
   #final-greeting {
     position: absolute;
     inset: 0;
@@ -113,43 +165,47 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.55);
+    background: rgba(0,0,0,0.6);
     text-align: center;
-    padding: 20px;
+    padding: 24px;
     pointer-events: none;
   }
   #final-greeting h1 {
     color: #FFD700;
-    font-size: clamp(28px, 8vw, 60px);
+    font-size: clamp(28px,8vw,60px);
     font-weight: 900;
-    text-shadow: 0 0 40px rgba(255,200,0,0.9), 0 4px 0 rgba(0,0,0,0.5);
-    margin-bottom: 16px;
+    text-shadow: 0 0 40px rgba(255,200,0,0.9),0 4px 0 rgba(0,0,0,0.5);
+    margin-bottom: 12px;
     line-height: 1.3;
     animation: zoomIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
   }
   #final-greeting p {
     color: #fff;
-    font-size: clamp(18px, 5vw, 36px);
+    font-size: clamp(18px,5vw,34px);
     text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-    animation: zoomIn 0.6s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+    animation: zoomIn 0.6s 0.15s cubic-bezier(0.34,1.56,0.64,1) both;
     line-height: 1.5;
   }
+  #final-sender {
+    margin-top: 16px;
+    color: #FFD700;
+    font-size: clamp(16px,4vw,26px);
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    animation: zoomIn 0.6s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
   @keyframes zoomIn { from{opacity:0;transform:scale(0.3)} to{opacity:1;transform:scale(1)} }
-
-  /* رسالة "هرب!" */
   #escape-msg {
     position: absolute;
     z-index: 25;
     color: #FF6B6B;
-    font-size: clamp(20px, 6vw, 40px);
+    font-size: clamp(22px,6vw,42px);
     font-weight: 900;
-    text-shadow: 0 0 20px rgba(255,50,50,0.8), 0 2px 0 #000;
+    text-shadow: 0 0 20px rgba(255,50,50,0.8),0 2px 0 #000;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s;
   }
-
-  /* زر إعادة */
   #replay-btn {
     position: absolute;
     bottom: 6%;
@@ -157,49 +213,57 @@
     transform: translateX(-50%);
     z-index: 45;
     background: rgba(255,215,0,0.15);
-    border: 2px solid rgba(255,215,0,0.6);
+    border: 2px solid rgba(255,215,0,0.7);
     color: #FFD700;
     padding: 12px 32px;
     border-radius: 50px;
-    font-size: clamp(14px, 3.5vw, 18px);
+    font-size: clamp(14px,3.5vw,18px);
     cursor: pointer;
     display: none;
     pointer-events: all;
     font-family: inherit;
-    font-weight: 600;
+    font-weight: 700;
   }
   #replay-btn:active { transform: translateX(-50%) scale(0.95); }
 </style>
 </head>
 <body>
 
+<!-- شاشة البداية -->
+<div id="splash" onclick="startExperience()">
+  <div id="splash-bg"></div>
+  <div id="splash-overlay"></div>
+  <div id="splash-content">
+    <h1>عيد أضحى مبارك 🌙</h1>
+    <p>كل عام وأنتم بخير<br>وصحة وسعادة</p>
+    <div class="sender-name">مع تحيات حلا 💛</div>
+    <button id="start-btn">✨ اضغط هنا ✨</button>
+  </div>
+</div>
+
+<!-- المشهد الرئيسي -->
 <div id="stage">
-  <div id="bg"></div>
-
-  <video id="video-walk" src="sheep-walk.mp4" playsinline loop muted></video>
-  <video id="video-mansaf" src="mansaf.mp4" playsinline muted></video>
-
+  <video id="video-walk" src="sheep-walk.mp4" playsinline loop></video>
+  <video id="video-mansaf" src="mansaf.mp4" playsinline></video>
   <div id="touch-layer"></div>
-
   <canvas id="confetti-canvas"></canvas>
-
   <div id="hint">👆 امسك الخروف!</div>
   <div id="escape-msg">هرب! 😂</div>
   <div id="flash"></div>
-
   <div id="final-greeting">
     <h1>عيد أضحى مبارك 🌙</h1>
-    <p>كل عام وأنتم بخير<br>وصحة وسعادة 🎉</p><p style="margin-top:16px;font-size:clamp(16px,4vw,28px);color:#FFD700;font-weight:700;">مع تحيات حلا 💛</p>
+    <p>كل عام وأنتم بخير<br>وصحة وسعادة 🎉</p>
+    <div id="final-sender">مع تحيات حلا 💛</div>
   </div>
-
   <button id="replay-btn" onclick="resetAll()">↩ مرة ثانية</button>
 </div>
 
-<!-- الأصوات -->
 <audio id="audio-takbeer" src="takbeer.mp3" loop></audio>
 <audio id="audio-sheep" src="sheep.mp3"></audio>
 
 <script>
+const splash = document.getElementById('splash');
+const stage = document.getElementById('stage');
 const touchLayer = document.getElementById('touch-layer');
 const videoWalk = document.getElementById('video-walk');
 const videoMansaf = document.getElementById('video-mansaf');
@@ -213,31 +277,27 @@ const takbeer = document.getElementById('audio-takbeer');
 const sheepSound = document.getElementById('audio-sheep');
 
 let clicks = 0;
-let confPieces = [];
-let confAnim = null;
-let started = false;
+let confPieces = [], confAnim = null;
 
-// ===== بدء التشغيل عند أول لمسة =====
 function startExperience() {
-  if (started) return;
-  started = true;
+  splash.style.transition = 'opacity 0.6s';
+  splash.style.opacity = '0';
+  setTimeout(() => { splash.style.display = 'none'; }, 600);
 
-  videoWalk.muted = false;
-  videoWalk.play().catch(() => { videoWalk.muted = true; videoWalk.play(); });
+  stage.style.display = 'block';
 
-  takbeer.volume = 0.25;
+  videoWalk.play().catch(() => {});
+  takbeer.volume = 0.3;
   takbeer.play().catch(() => {});
 }
 
-// ===== موضع رسالة "هرب!" =====
 function showEscapeMsg(x, y) {
-  escapeMsg.style.left = Math.min(x, window.innerWidth - 120) + 'px';
-  escapeMsg.style.top = Math.max(y - 60, 20) + 'px';
+  escapeMsg.style.left = Math.min(x, window.innerWidth - 130) + 'px';
+  escapeMsg.style.top = Math.max(y - 70, 20) + 'px';
   escapeMsg.style.opacity = '1';
   setTimeout(() => escapeMsg.style.opacity = '0', 1200);
 }
 
-// ===== كونفيتي =====
 function initConfetti() {
   confCanvas.width = window.innerWidth;
   confCanvas.height = window.innerHeight;
@@ -268,83 +328,57 @@ function animateConfetti() {
     if (p.delay > 0) { p.delay--; return; }
     p.x += p.vx; p.y += p.vy; p.vy += 0.1; p.rot += p.vrot;
     if (p.y < confCanvas.height + 30) alive = true;
-    const alpha = Math.max(0, 1 - p.y / (confCanvas.height + 30));
     ctx.save();
     ctx.translate(p.x, p.y);
     ctx.rotate(p.rot * Math.PI / 180);
-    ctx.globalAlpha = alpha;
+    ctx.globalAlpha = Math.max(0, 1 - p.y / (confCanvas.height + 30));
     ctx.fillStyle = p.color;
-    if (p.circle) {
-      ctx.beginPath(); ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2); ctx.fill();
-    } else {
-      ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-    }
+    if (p.circle) { ctx.beginPath(); ctx.arc(0,0,p.size/2,0,Math.PI*2); ctx.fill(); }
+    else { ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2); }
     ctx.restore();
   });
   if (alive) confAnim = requestAnimationFrame(animateConfetti);
 }
 
-// ===== اللمس الرئيسي =====
 function handleTap(e) {
   e.preventDefault();
-  startExperience();
-
   if (clicks >= 2) return;
 
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
   clicks++;
 
   if (clicks === 1) {
-    // المسكة الأولى — هرب!
     sheepSound.currentTime = 0;
     sheepSound.play().catch(() => {});
-
-    // فلاش خفيف
-    flash.style.opacity = '0.4';
+    flash.style.opacity = '0.35';
     setTimeout(() => flash.style.opacity = '0', 100);
-
     showEscapeMsg(clientX, clientY);
     hint.textContent = '👆 امسكه تاني مرة!';
-    hint.style.color = 'rgba(100, 255, 150, 0.95)';
-
-    // اهتزاز الموبايل
+    hint.style.color = 'rgba(100,255,150,0.95)';
     if (navigator.vibrate) navigator.vibrate(80);
 
   } else if (clicks === 2) {
-    // المسكة الثانية — المنسف!
     touchLayer.style.pointerEvents = 'none';
     hint.style.display = 'none';
     escapeMsg.style.opacity = '0';
-
-    // فلاش قوي
     flash.style.opacity = '1';
     setTimeout(() => flash.style.opacity = '0', 150);
-
-    if (navigator.vibrate) navigator.vibrate([100, 50, 200]);
-
-    // صوت الخروف الأخير (أطول)
+    if (navigator.vibrate) navigator.vibrate([100,50,200]);
     sheepSound.currentTime = 0;
     sheepSound.playbackRate = 0.8;
     sheepSound.play().catch(() => {});
-
-    // switch للمنسف
     videoWalk.style.display = 'none';
     videoMansaf.style.display = 'block';
     videoMansaf.play().catch(() => {});
-
-    // لما ينتهي فيديو المنسف
     videoMansaf.onended = showFinal;
-
-    // backup لو الفيديو ما اشتغل
-    setTimeout(showFinal, 5000);
+    setTimeout(showFinal, 6000);
   }
 }
 
 function showFinal() {
   videoMansaf.onended = null;
-  takbeer.volume = 0.5; // ارفع صوت التكبيرات
+  takbeer.volume = 0.5;
   finalGreeting.style.display = 'flex';
   initConfetti();
   animateConfetti();
@@ -353,41 +387,29 @@ function showFinal() {
 
 function resetAll() {
   clicks = 0;
-  started = false;
-
+  splash.style.display = 'flex';
+  splash.style.opacity = '1';
+  stage.style.display = 'none';
   videoWalk.style.display = 'block';
-  videoWalk.muted = true;
   videoWalk.currentTime = 0;
-  videoWalk.play();
-
   videoMansaf.style.display = 'none';
   videoMansaf.currentTime = 0;
-
   finalGreeting.style.display = 'none';
   replayBtn.style.display = 'none';
   hint.style.display = 'block';
   hint.textContent = '👆 امسك الخروف!';
-  hint.style.color = 'rgba(255, 220, 100, 0.95)';
+  hint.style.color = 'rgba(255,220,100,0.95)';
   touchLayer.style.pointerEvents = 'all';
   flash.style.opacity = '0';
-
   if (confAnim) cancelAnimationFrame(confAnim);
   confCanvas.style.display = 'none';
-  confCanvas.getContext('2d').clearRect(0, 0, confCanvas.width, confCanvas.height);
-
-  takbeer.volume = 0.25;
+  takbeer.pause(); takbeer.currentTime = 0;
   sheepSound.playbackRate = 1;
 }
 
-// ===== Events =====
 touchLayer.addEventListener('touchstart', handleTap, { passive: false });
 touchLayer.addEventListener('click', handleTap);
-
-// resize confetti canvas
-window.addEventListener('resize', () => {
-  confCanvas.width = window.innerWidth;
-  confCanvas.height = window.innerHeight;
-});
+window.addEventListener('resize', () => { confCanvas.width = window.innerWidth; confCanvas.height = window.innerHeight; });
 </script>
 </body>
 </html>
